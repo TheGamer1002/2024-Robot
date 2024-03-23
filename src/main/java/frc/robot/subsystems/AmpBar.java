@@ -14,9 +14,10 @@ public class AmpBar {
         IN,
         OUT
     }
-  
+    // PID loop
     PIDController pivotController = new PIDController(1.5, 0, 0);
-    private AmpBarStates state = AmpBarStates.OUT;
+    private AmpBarStates state = AmpBarStates.OUT; // default to out because we don't start with it out
+    // Motors and Encoders
     private final WPI_TalonSRX leftMotor = new WPI_TalonSRX(40);
     private final WPI_TalonSRX rightMotor = new WPI_TalonSRX(45);
     private DutyCycleEncoder pivotEncoder = new DutyCycleEncoder(9);
@@ -26,6 +27,7 @@ public class AmpBar {
     
     public AmpBar(Robot robot) {
         this.robot = robot;
+        // motor and encoder setup
         rightMotor.follow(leftMotor);
         leftMotor.setInverted(true);
 
@@ -52,6 +54,7 @@ public class AmpBar {
             leftMotor.set(pivotController.calculate(pivotEncoder.getAbsolutePosition(), pivotMotorSetpoint));
         } else {
             System.out.println("Amp Bar Encoder Unplugged zzzzz");
+            // -0.2 <- 0 -> 0.2 on the dpad
             if (robot.secondaryController.getPOV() == Constants.DPAD_LEFT) {
                 leftMotor.set(-0.2);
             } else if (robot.secondaryController.getPOV() == Constants.DPAD_RIGHT) {
